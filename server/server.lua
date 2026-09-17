@@ -6,9 +6,9 @@ QBCore.Functions.CreateCallback('qb-scoreboard:server:GetScoreboardData', functi
     local players = {}
     for _, v in pairs(QBCore.Functions.GetQBPlayers()) do
         if v then
-            totalPlayers += 1
+            totalPlayers = totalPlayers + 1
             if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
-                policeCount += 1
+                policeCount = policeCount + 1
             end
             players[v.PlayerData.source] = {}
             players[v.PlayerData.source].optin = QBCore.Functions.IsOptin(v.PlayerData.source)
@@ -17,7 +17,8 @@ QBCore.Functions.CreateCallback('qb-scoreboard:server:GetScoreboardData', functi
     cb(totalPlayers, policeCount, players)
 end)
 
-RegisterNetEvent('qb-scoreboard:server:SetActivityBusy', function(activity, bool)
-    Config.IllegalActions[activity].busy = bool
+-- Activity state is owned by trusted server resources, never config or clients.
+AddEventHandler('qb-scoreboard:server:SetActivityBusy', function(activity, bool)
+    if type(activity) ~= 'string' or not Config.IllegalActions[activity] or type(bool) ~= 'boolean' then return end
     TriggerClientEvent('qb-scoreboard:client:SetActivityBusy', -1, activity, bool)
 end)

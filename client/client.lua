@@ -7,6 +7,8 @@ local nearbyPlayers = {}
 local lastTotalPlayers = 0
 local lastPoliceCount = 0
 local opening = false
+local keyHeld = false
+local busyActivities = {}
 
 local scanInterval = 500  -- ms between nearby-player distance scans
 local renderInterval = 0  -- ms between draws while someone is nearby
@@ -78,8 +80,8 @@ local function startTracking()
 end
 
 
-local function policeStatus(activity)
-    if activity.busy then
+local function policeStatus(id, activity)
+    if busyActivities[id] then
         return { value = 'On cooldown', tone = 'warning', badge = true }
     end
     if lastPoliceCount >= activity.minimumPolice then
@@ -90,11 +92,11 @@ end
 
 local function buildActivityRows()
     local rows = {}
-    for _, activity in pairs(Config.IllegalActions) do
+    for id, activity in pairs(Config.IllegalActions) do
         rows[#rows + 1] = {
             activity = activity.label,
             required = activity.minimumPolice,
-            status = policeStatus(activity),
+            status = policeStatus(id, activity),
         }
     end
     table.sort(rows, function(a, b) return a.activity < b.activity end)
@@ -149,33 +151,50 @@ QB.nui.registerApp({
 
 RegisterNetEvent('qb-scoreboard:client:SetActivityBusy', function(activity, busy)
     if not Config.IllegalActions[activity] then return end
-    Config.IllegalActions[activity].busy = busy
+    busyActivities[activity] = busy == true
     QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
 end)
 
 
-local function openScoreboard()
+local function openScoreboard(fromKey)
     if opening or QB.nui.isAppOpen(APP_ID) then return end
     opening = true
 
     QBCore.Functions.TriggerCallback('qb-scoreboard:server:GetScoreboardData', function(totalPlayers, policeCount, playerList)
+        if fromKey and not Config.Toggle and not keyHeld then opening = false return end
         playerOptin = playerList
         lastTotalPlayers = totalPlayers
         lastPoliceCount = policeCount
         QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
 
-        startTracking()
         local opened, err = pcall(QB.nui.openApp, APP_ID)
         opening = false
+        if opened then startTracking() end
         if not opened then print(('[qb-scoreboard] could not open: %s'):format(tostring(err))) end
     end)
 end
 
-RegisterCommand('scoreboard', function()
+local function toggleScoreboard()
     if QB.nui.isAppOpen(APP_ID) then
         QB.nui.closeApp(APP_ID)
     else
         openScoreboard()
     end
+end
+RegisterCommand('scoreboard', toggleScoreboard, false)
+RegisterCommand('+scoreboard', function()
+    keyHeld = true
+    if Config.Toggle then toggleScoreboard() else openScoreboard(true) end
 end, false)
-RegisterKeyMapping('scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
+RegisterCommand('-scoreboard', function()
+    keyHeld = false
+    if not Config.Toggle then QB.nui.closeApp(APP_ID) end
+end, false)
+RegisterKeyMapping('+scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
+
+QB.config.bind('qbscoreboard', {}, function(values)
+    Config = values
+    if QB.nui.isAppOpen(APP_ID) then
+        QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
+    end
+end)

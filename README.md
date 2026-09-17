@@ -1,6 +1,18 @@
 # qb-scoreboard
 Scoreboard for QB-Core
 
+Server owners can change display and police-count settings through `/config`.
+The default key is an Advanced setting; existing players retain their personal
+FiveM key binding. Display capacity changes the scoreboard, not the server's
+connection limit. Activity thresholds describe availability; the activity
+resource remains responsible for enforcing its own requirements.
+
+Busy/cooldown status is runtime state. Trusted server scripts can use
+`TriggerEvent('qb-scoreboard:server:SetActivityBusy', activityId, true)` and
+send `false` when it ends. Clients cannot set this state on the server.
+
+Run `bash test/run.sh` for the configuration and interaction smoke checks.
+
 # License
 
     QBCore Framework
