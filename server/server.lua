@@ -1,17 +1,15 @@
-local QBCore = exports['qb-core']:GetCoreObject({ 'Functions' })
-
-QBCore.Functions.CreateCallback('qb-scoreboard:server:GetScoreboardData', function(_, cb)
+exports.qbcore:createCallback('qb-scoreboard:server:GetScoreboardData', function(_, cb)
     local totalPlayers = 0
     local policeCount = 0
     local players = {}
-    for _, v in pairs(QBCore.Functions.GetQBPlayers()) do
+    for _, v in pairs(exports.qbcore:getAllPlayers()) do
         if v then
             totalPlayers = totalPlayers + 1
-            if v.PlayerData.job.name == 'police' and v.PlayerData.job.onduty then
+            if v.job.name == 'police' and v.job.onduty then
                 policeCount = policeCount + 1
             end
-            players[v.PlayerData.source] = {}
-            players[v.PlayerData.source].optin = QBCore.Functions.IsOptin(v.PlayerData.source)
+            players[v.source] = {}
+            players[v.source].optin = exports.qbcore:isOptin(v.source)
         end
     end
     cb(totalPlayers, policeCount, players)

@@ -9,16 +9,15 @@ function AddEventHandler(name, handler) handlers[name] = handler end
 function RegisterNetEvent(name, handler) handlers[name] = handler end
 function RegisterCommand(name, handler) commands[name] = handler end
 function RegisterKeyMapping(name) assert(name == '+scoreboard') end
-function CreateThread() end
-local core = { Functions = {
-    TriggerCallback = function(_, callback) pending = callback end,
-    CreateCallback = function() end,
-} }
-exports = setmetatable({ ['qb-core'] = { GetCoreObject = function() return core end } }, {
+function CreateThread(handler) pending = handler end
+exports = setmetatable({ qbcore = { createCallback = function() end } }, {
     __call = function(_, name, handler) registeredExports[name] = handler end,
 })
 local makeConfig = dofile('../qblib/modules/config/consumer.lua')
-QB = { config = makeConfig({ config_register = function(_, definition) schema = definition.schema end }), nui = {
+QB = { callback = { trigger = function(name)
+    assert(name == 'qb-scoreboard:server:GetScoreboardData')
+    return 1, 0, {}
+end }, config = makeConfig({ config_register = function(_, definition) schema = definition.schema end }), nui = {
     registerApp = function() end,
     isAppOpen = function() return opened end,
     openApp = function() opened = true end,

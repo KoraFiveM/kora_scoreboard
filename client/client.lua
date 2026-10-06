@@ -1,5 +1,3 @@
-local QBCore = exports['qb-core']:GetCoreObject({ 'Functions' })
-
 local APP_ID = 'qb-scoreboard:app'
 
 local playerOptin = {}
@@ -160,7 +158,8 @@ local function openScoreboard(fromKey)
     if opening or QB.nui.isAppOpen(APP_ID) then return end
     opening = true
 
-    QBCore.Functions.TriggerCallback('qb-scoreboard:server:GetScoreboardData', function(totalPlayers, policeCount, playerList)
+    CreateThread(function()
+        local totalPlayers, policeCount, playerList = QB.callback.trigger('qb-scoreboard:server:GetScoreboardData')
         if fromKey and not Config.Toggle and not keyHeld then opening = false return end
         playerOptin = playerList
         lastTotalPlayers = totalPlayers
