@@ -1,15 +1,15 @@
-exports.qbcore:createCallback('qb-scoreboard:server:GetScoreboardData', function(_, cb)
+exports.kora_core:createCallback('qb-scoreboard:server:GetScoreboardData', function(_, cb)
     local totalPlayers = 0
     local policeCount = 0
     local players = {}
-    for _, v in pairs(exports.qbcore:getAllPlayers()) do
+    for _, v in pairs(exports.kora_core:getAllPlayers()) do
         if v then
             totalPlayers = totalPlayers + 1
             if v.job.name == 'police' and v.job.onduty then
                 policeCount = policeCount + 1
             end
             players[v.source] = {}
-            players[v.source].optin = exports.qbcore:isOptin(v.source)
+            players[v.source].optin = exports.kora_core:isOptin(v.source)
         end
     end
     cb(totalPlayers, policeCount, players)

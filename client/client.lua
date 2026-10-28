@@ -191,7 +191,7 @@ RegisterCommand('-scoreboard', function()
 end, false)
 RegisterKeyMapping('+scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
 
-QB.config.bind('qbscoreboard', {}, function(values)
+QB.config.bind('kora_scoreboard', {}, function(values)
     Config = values
     if QB.nui.isAppOpen(APP_ID) then
         QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })

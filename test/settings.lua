@@ -1,7 +1,7 @@
 local schema
 local handlers, commands, registeredExports = {}, {}, {}
 local opened, updates, pending, binding = false, 0, nil, nil
-function GetCurrentResourceName() return 'qbscoreboard' end
+function GetCurrentResourceName() return 'kora_scoreboard' end
 function IsDuplicityVersion() return true end
 function GetConvarInt(_, fallback) return fallback end
 function LoadResourceFile() return nil end
@@ -10,10 +10,10 @@ function RegisterNetEvent(name, handler) handlers[name] = handler end
 function RegisterCommand(name, handler) commands[name] = handler end
 function RegisterKeyMapping(name) assert(name == '+scoreboard') end
 function CreateThread(handler) pending = handler end
-exports = setmetatable({ qbcore = { createCallback = function() end } }, {
+exports = setmetatable({ kora_core = { createCallback = function() end } }, {
     __call = function(_, name, handler) registeredExports[name] = handler end,
 })
-local makeConfig = dofile('../qblib/modules/config/consumer.lua')
+local makeConfig = dofile('../kora_lib/modules/config/consumer.lua')
 QB = { callback = { trigger = function(name)
     assert(name == 'qb-scoreboard:server:GetScoreboardData')
     return 1, 0, {}
@@ -29,7 +29,7 @@ assert(schema.fields.OpenKey.advanced, 'default key must be advanced')
 assert(schema.fields.ShowIDforALL.live, 'ID visibility must update live')
 assert(not schema.fields.IllegalActions.fields.storerobbery.fields.busy, 'runtime activity state must not be editable config')
 QB.config.bind = function(resource, path, callback)
-    assert(resource == 'qbscoreboard' and #path == 0)
+    assert(resource == 'kora_scoreboard' and #path == 0)
     binding = callback
 end
 dofile('client/client.lua')
