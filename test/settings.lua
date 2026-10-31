@@ -14,7 +14,7 @@ exports = setmetatable({ kora_core = { createCallback = function() end } }, {
     __call = function(_, name, handler) registeredExports[name] = handler end,
 })
 local makeConfig = dofile('../kora_lib/modules/config/consumer.lua')
-QB = { callback = { trigger = function(name)
+Kora = { callback = { trigger = function(name)
     assert(name == 'qb-scoreboard:server:GetScoreboardData')
     return 1, 0, {}
 end }, config = makeConfig({ config_register = function(_, definition) schema = definition.schema end }), nui = {
@@ -28,7 +28,7 @@ dofile('shared/config.lua')
 assert(schema.fields.OpenKey.advanced, 'default key must be advanced')
 assert(schema.fields.ShowIDforALL.live, 'ID visibility must update live')
 assert(not schema.fields.IllegalActions.fields.storerobbery.fields.busy, 'runtime activity state must not be editable config')
-QB.config.bind = function(resource, path, callback)
+Kora.config.bind = function(resource, path, callback)
     assert(resource == 'kora_scoreboard' and #path == 0)
     binding = callback
 end

@@ -49,14 +49,14 @@ end
 
 local function startTracking()
     CreateThread(function()
-        while QB.nui.isAppOpen(APP_ID) do
+        while Kora.nui.isAppOpen(APP_ID) do
             scanNearbyPlayers(GetEntityCoords(PlayerPedId()), 10.0, nearbyPlayers)
             Wait(scanInterval)
         end
     end)
 
     CreateThread(function()
-        while QB.nui.isAppOpen(APP_ID) do
+        while Kora.nui.isAppOpen(APP_ID) do
             local wait = scanInterval
             for i = 1, #nearbyPlayers do
                 local player = nearbyPlayers[i]
@@ -132,7 +132,7 @@ local function buildNavigation()
     } }
 end
 
-QB.nui.registerApp({
+Kora.nui.registerApp({
     id = APP_ID,
     title = 'Scoreboard',
     description = 'Server population and police-gated activity status.',
@@ -150,23 +150,23 @@ QB.nui.registerApp({
 RegisterNetEvent('qb-scoreboard:client:SetActivityBusy', function(activity, busy)
     if not Config.IllegalActions[activity] then return end
     busyActivities[activity] = busy == true
-    QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
+    Kora.nui.updateApp(APP_ID, { navigation = buildNavigation() })
 end)
 
 
 local function openScoreboard(fromKey)
-    if opening or QB.nui.isAppOpen(APP_ID) then return end
+    if opening or Kora.nui.isAppOpen(APP_ID) then return end
     opening = true
 
     CreateThread(function()
-        local totalPlayers, policeCount, playerList = QB.callback.trigger('qb-scoreboard:server:GetScoreboardData')
+        local totalPlayers, policeCount, playerList = Kora.callback.trigger('qb-scoreboard:server:GetScoreboardData')
         if fromKey and not Config.Toggle and not keyHeld then opening = false return end
         playerOptin = playerList
         lastTotalPlayers = totalPlayers
         lastPoliceCount = policeCount
-        QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
+        Kora.nui.updateApp(APP_ID, { navigation = buildNavigation() })
 
-        local opened, err = pcall(QB.nui.openApp, APP_ID)
+        local opened, err = pcall(Kora.nui.openApp, APP_ID)
         opening = false
         if opened then startTracking() end
         if not opened then print(('[qb-scoreboard] could not open: %s'):format(tostring(err))) end
@@ -174,8 +174,8 @@ local function openScoreboard(fromKey)
 end
 
 local function toggleScoreboard()
-    if QB.nui.isAppOpen(APP_ID) then
-        QB.nui.closeApp(APP_ID)
+    if Kora.nui.isAppOpen(APP_ID) then
+        Kora.nui.closeApp(APP_ID)
     else
         openScoreboard()
     end
@@ -187,13 +187,13 @@ RegisterCommand('+scoreboard', function()
 end, false)
 RegisterCommand('-scoreboard', function()
     keyHeld = false
-    if not Config.Toggle then QB.nui.closeApp(APP_ID) end
+    if not Config.Toggle then Kora.nui.closeApp(APP_ID) end
 end, false)
 RegisterKeyMapping('+scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
 
-QB.config.bind('kora_scoreboard', {}, function(values)
+Kora.config.bind('kora_scoreboard', {}, function(values)
     Config = values
-    if QB.nui.isAppOpen(APP_ID) then
-        QB.nui.updateApp(APP_ID, { navigation = buildNavigation() })
+    if Kora.nui.isAppOpen(APP_ID) then
+        Kora.nui.updateApp(APP_ID, { navigation = buildNavigation() })
     end
 end)
