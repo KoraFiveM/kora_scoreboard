@@ -168,8 +168,11 @@ local function openScoreboard(fromKey)
 
         local opened, err = pcall(Kora.nui.openApp, APP_ID)
         opening = false
-        if opened then startTracking() end
-        if not opened then print(('[qb-scoreboard] could not open: %s'):format(tostring(err))) end
+        if opened then
+            startTracking()
+        else
+            print(('[qb-scoreboard] could not open: %s'):format(tostring(err)))
+        end
     end)
 end
 
