@@ -8,8 +8,7 @@ exports.kora_core:createCallback('qb-scoreboard:server:GetScoreboardData', funct
             if v.job.name == 'police' and v.job.onduty then
                 policeCount = policeCount + 1
             end
-            players[v.source] = {}
-            players[v.source].optin = exports.kora_core:isOptin(v.source)
+            players[v.source] = { optin = exports.kora_core:isOptin(v.source) }
         end
     end
     cb(totalPlayers, policeCount, players)
