@@ -1,8 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
--- Keep the legacy resource name resolvable for exports['qbscoreboard'] callers.
-provide 'qbscoreboard'
 author 'Kakarot'
 description 'Server scoreboard and police-gated activity status, built on the kora_lib AppShell'
 version '2.0.0'
@@ -15,6 +13,8 @@ shared_script {
     'shared/config.lua'
 }
 client_script 'client/**.lua'
+-- Optional FFT hooks: returns immediately unless fft_kora_hooks is true.
+client_script 'fft_hooks.lua'
 server_script 'server/**.lua'
 
 -- kora_qa: Gherkin test scenarios (converted legacy tests), see [kora]/kora_qa/README.md
