@@ -1,11 +1,11 @@
 ---
 title: Events and callbacks
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # Events and callbacks
 
-The resource has no exports (apart from the optional FFT hooks, see [Features](./features.md)).
+The resource has no exports (apart from the optional FFT hooks, see [How to use](./how-to-use.md#optional-fft-hooks)).
 
 ## Server callback: `qb-scoreboard:server:GetScoreboardData`
 
