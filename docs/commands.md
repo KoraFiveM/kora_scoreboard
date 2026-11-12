@@ -1,9 +1,40 @@
 ---
-title: Commands and key binding
+title: "Commands"
 sidebar_position: 4
 ---
 
-# Commands and key binding
+
+# Commands
+
+Kora Scoreboard registers one toggle command/key, built from three linked FiveM commands.
+
+## Built-in commands
+
+### `/scoreboard`
+
+Opens the panel if closed, closes it if open. Works regardless of `Config.Toggle`.
+
+| Field | Details |
+| --- | --- |
+| Context | In-game · client command |
+| Arguments | No arguments. |
+| Access | Everyone. |
+
+**Example**
+
+```text
+/scoreboard
+```
+
+**Result**
+
+Toggles the Scoreboard panel.
+
+## The key binding is three commands
+
+The key (`Config.OpenKey`, default `HOME`) is bound to `+scoreboard` (key down) and its matching `-scoreboard` (key up) is registered automatically by FiveM. Key-down toggles or opens depending on `Config.Toggle`; key-up closes the panel only in hold mode. `/scoreboard` is a separate, always-available toggle that does not depend on the key state.
+
+## Command summary
 
 | Command | Description |
 | --- | --- |

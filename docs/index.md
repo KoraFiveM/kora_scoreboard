@@ -9,14 +9,16 @@ sidebar_position: 1
 
 Current version: see `version` in `fxmanifest.lua`.
 
-## Pages
+## Documentation map
 
-- [Features](./features.md) - what the scoreboard shows and how it behaves.
+- [Installation](./installation.md) - install steps, manifest reference, requirements, robbery script integration, tests and licence.
+- [How to use](./how-to-use.md) - opening the panel, the overview page, counts, activity status and cooldowns, nearby ID labels, FFT hooks.
+- [Commands](./commands.md) - `/scoreboard`, the `+scoreboard`/`-scoreboard` key commands, key mapping, toggle and hold modes.
 - [Configuration](./configuration.md) - every config option and the default activities.
-- [Commands and key binding](./commands.md) - `/scoreboard`, the key mapping, toggle and hold modes.
 - [Events and callbacks](./events.md) - the server callback and the busy-state event for robbery scripts.
-- [Installation and dependencies](./installation.md) - requirements, setup and tests.
 - [Troubleshooting](./troubleshooting.md) - common problems and known limitations.
+
+This resource has no public API reference: it registers no exports apart from the optional FFT hooks.
 
 ## Quick start
 
