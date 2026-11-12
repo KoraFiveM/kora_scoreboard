@@ -12,6 +12,9 @@ shared_script {
     '@kora_lib/init.lua',
     'shared/config.lua'
 }
+files {
+    'locales/*.lua',
+}
 client_script 'client/**.lua'
 -- Optional FFT hooks: returns immediately unless fft_kora_hooks is true.
 client_script 'fft_hooks.lua'

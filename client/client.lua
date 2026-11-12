@@ -80,12 +80,12 @@ end
 
 local function policeStatus(id, activity)
     if busyActivities[id] then
-        return { value = 'On cooldown', tone = 'warning', badge = true }
+        return { value = Kora.lang('on_cooldown'), tone = 'warning', badge = true }
     end
     if lastPoliceCount >= activity.minimumPolice then
-        return { value = 'Ready', tone = 'success', badge = true }
+        return { value = Kora.lang('ready'), tone = 'success', badge = true }
     end
-    return { value = 'Needs more police', tone = 'destructive', badge = true }
+    return { value = Kora.lang('needs_police'), tone = 'destructive', badge = true }
 end
 
 local function buildActivityRows()
@@ -104,28 +104,28 @@ end
 local function buildNavigation()
     return { {
         id = 'overview',
-        label = 'Overview',
+        label = Kora.lang('overview'),
         icon = 'Users',
         content = {
-            title = 'Server status',
+            title = Kora.lang('server_status'),
             blocks = {
                 {
                     type = 'stats',
                     items = {
-                        { label = 'Players online', value = ('%d / %d'):format(lastTotalPlayers, Config.MaxPlayers), icon = 'Users' },
-                        { label = 'Police on duty', value = lastPoliceCount, icon = 'Shield' },
+                        { label = Kora.lang('players_online'), value = ('%d / %d'):format(lastTotalPlayers, Config.MaxPlayers), icon = 'Users' },
+                        { label = Kora.lang('police_on_duty'), value = lastPoliceCount, icon = 'Shield' },
                     },
                 },
                 {
                     type = 'table',
-                    title = 'Police-gated activities',
+                    title = Kora.lang('police_gated_activities'),
                     columns = {
-                        { key = 'activity', label = 'Activity' },
-                        { key = 'required', label = 'Required police', align = 'center' },
-                        { key = 'status', label = 'Status', align = 'center' },
+                        { key = 'activity', label = Kora.lang('activity') },
+                        { key = 'required', label = Kora.lang('required_police'), align = 'center' },
+                        { key = 'status', label = Kora.lang('status'), align = 'center' },
                     },
                     rows = buildActivityRows(),
-                    empty = 'No police-gated activities are configured.',
+                    empty = Kora.lang('no_activities'),
                 },
             },
         },
@@ -134,15 +134,15 @@ end
 
 Kora.nui.registerApp({
     id = APP_ID,
-    title = 'Scoreboard',
-    description = 'Server population and police-gated activity status.',
+    title = Kora.lang('scoreboard'),
+    description = Kora.lang('description'),
     icon = 'Users',
     layout = 'compact',
     width = 580,
     height = 620,
     placement = 'right',
-    footer = Config.Toggle and ('Press %s or Escape to close'):format(Config.OpenKey)
-        or ('Hold %s to view'):format(Config.OpenKey),
+    footer = Config.Toggle and Kora.lang('press_to_toggle', Config.OpenKey)
+        or Kora.lang('hold_to_view', Config.OpenKey),
     navigation = buildNavigation(),
 })
 
@@ -183,6 +183,7 @@ local function toggleScoreboard()
         openScoreboard()
     end
 end
+
 RegisterCommand('scoreboard', toggleScoreboard, false)
 RegisterCommand('+scoreboard', function()
     keyHeld = true
@@ -192,7 +193,7 @@ RegisterCommand('-scoreboard', function()
     keyHeld = false
     if not Config.Toggle then Kora.nui.closeApp(APP_ID) end
 end, false)
-RegisterKeyMapping('+scoreboard', 'Open Scoreboard', 'keyboard', Config.OpenKey)
+RegisterKeyMapping('+scoreboard', Kora.lang('open_scoreboard'), 'keyboard', Config.OpenKey)
 
 Kora.config.bind('kora_scoreboard', {}, function(values)
     Config = values
