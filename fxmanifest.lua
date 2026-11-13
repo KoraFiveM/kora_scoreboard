@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
-author 'Kakarot'
+author 'Kora'
 description 'Server scoreboard and police-gated activity status, built on the kora_lib AppShell'
 version '0.2.1'
 
@@ -11,6 +11,9 @@ dependency 'kora_core'
 shared_script {
     '@kora_lib/init.lua',
     'shared/config.lua'
+}
+files {
+    'locales/*.lua',
 }
 client_script 'client/**.lua'
 -- Optional FFT hooks: returns immediately unless fft_kora_hooks is true.
