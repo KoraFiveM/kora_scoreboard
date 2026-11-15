@@ -171,7 +171,7 @@ local function openScoreboard(fromKey)
         if opened then
             startTracking()
         else
-            print(('[qb-scoreboard] could not open: %s'):format(tostring(err)))
+            Kora.logging.warn('ui.open_failed', 'Scoreboard could not open', { error = tostring(err) })
         end
     end)
 end
