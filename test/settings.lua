@@ -14,7 +14,10 @@ exports = setmetatable({ kora_core = { createCallback = function() end } }, {
     __call = function(_, name, handler) registeredExports[name] = handler end,
 })
 local makeConfig = dofile('../kora_lib/modules/config/consumer.lua')
-Kora = { callback = { trigger = function(name)
+local logged = {}
+Kora = { lang = function(key) return key end, logging = setmetatable({}, { __index = function(_, level)
+    return function(event, message, fields) logged[#logged + 1] = { level = level, event = event, message = message, fields = fields }; return true end
+end }), callback = { trigger = function(name)
     assert(name == 'qb-scoreboard:server:GetScoreboardData')
     return 1, 0, {}
 end }, config = makeConfig({ config_register = function(_, definition) schema = definition.schema end }), nui = {
@@ -55,6 +58,15 @@ handlers['qb-scoreboard:client:SetActivityBusy']('storerobbery', true)
 assert(Config.IllegalActions.storerobbery.busy == nil, 'runtime busy state stays outside configuration')
 commands['+scoreboard']()
 assert(not opened, 'second press closes toggle mode')
+-- A failing NUI open is reported through Kora.logging (warn, stable event, error in fields).
+local realOpen = Kora.nui.openApp
+Kora.nui.openApp = function() error('nui unavailable') end
+commands['+scoreboard']()
+pending(1, 0, {})
+Kora.nui.openApp = realOpen
+assert(#logged == 1, 'the failed open is logged once')
+assert(logged[1].level == 'warn' and logged[1].event == 'ui.open_failed', 'warn level with a stable event name')
+assert(tostring(logged[1].fields.error):find('nui unavailable', 1, true), 'fields carry the error')
 RegisterNetEvent = function() error('activity changes must not be client-callable') end
 local broadcasts = 0
 function TriggerClientEvent() broadcasts = broadcasts + 1 end

@@ -2,3 +2,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 lua test/settings.lua
+lua test/no_raw_print.lua
