@@ -3,7 +3,7 @@ game 'gta5'
 lua54 'yes'
 author 'Kora'
 description 'Server scoreboard and police-gated activity status, built on the kora_lib AppShell'
-version '0.2.1'
+version '0.2.2'
 
 dependency 'kora_lib'
 dependency 'kora_core'
